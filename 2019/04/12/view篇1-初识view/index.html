@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="onDraw()方法中的Canvas的大小是多少 控件的大小是wrap_content时 getMeasuredWidth()是如何测量的 IPC过程">
+<meta name="description" content="Android View篇—–初识viewview简介在Android操作系统中，几乎所有的UI元素都是基于View和ViewGroup创建出来的。View就是一块可以用来进行绘画，可以处理输入事件进行交互的矩形区域，而ViewGroup就是一种可以容纳View的矩形容器。  下图就是ViewGroup和View组成的UI布局结构。View和ViewGroup通过这种树形结构组合在一起，构成了我们">
 <meta name="keywords" content="Android java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="&lt;自定义View问题总结&gt;">
-<meta property="og:url" content="http://yoursite.com/2019/04/08/自定义View问题总结/index.html">
+<meta property="og:title" content="view篇1--------初识view">
+<meta property="og:url" content="http://yoursite.com/2019/04/12/view篇1-初识view/index.html">
 <meta property="og:site_name" content="bumblebee&#39;s blog">
-<meta property="og:description" content="onDraw()方法中的Canvas的大小是多少 控件的大小是wrap_content时 getMeasuredWidth()是如何测量的 IPC过程">
+<meta property="og:description" content="Android View篇—–初识viewview简介在Android操作系统中，几乎所有的UI元素都是基于View和ViewGroup创建出来的。View就是一块可以用来进行绘画，可以处理输入事件进行交互的矩形区域，而ViewGroup就是一种可以容纳View的矩形容器。  下图就是ViewGroup和View组成的UI布局结构。View和ViewGroup通过这种树形结构组合在一起，构成了我们">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-04-08T09:46:36.329Z">
+<meta property="og:updated_time" content="2019-04-12T09:20:22.556Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="&lt;自定义View问题总结&gt;">
-<meta name="twitter:description" content="onDraw()方法中的Canvas的大小是多少 控件的大小是wrap_content时 getMeasuredWidth()是如何测量的 IPC过程">
+<meta name="twitter:title" content="view篇1--------初识view">
+<meta name="twitter:description" content="Android View篇—–初识viewview简介在Android操作系统中，几乎所有的UI元素都是基于View和ViewGroup创建出来的。View就是一块可以用来进行绘画，可以处理输入事件进行交互的矩形区域，而ViewGroup就是一种可以容纳View的矩形容器。  下图就是ViewGroup和View组成的UI布局结构。View和ViewGroup通过这种树形结构组合在一起，构成了我们">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/04/08/自定义View问题总结/">
+  <link rel="canonical" href="http://yoursite.com/2019/04/12/view篇1-初识view/">
 
 
 
 
 
-  <title><自定义view问题总结> | bumblebee's blog</自定义view问题总结></title>
+  <title>view篇1--------初识view | bumblebee's blog</title>
   
 
 
@@ -297,7 +297,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/08/自定义View问题总结/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/12/view篇1-初识view/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="lixinyi">
@@ -314,7 +314,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"><自定义view问题总结></自定义view问题总结></h1>
+          <h1 class="post-title" itemprop="name headline">view篇1--------初识view</h1>
         
 
         <div class="post-meta">
@@ -326,8 +326,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-08T17:42:58+08:00">
-                2019-04-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-12T17:15:52+08:00">
+                2019-04-12
               </time>
             
 
@@ -364,11 +364,57 @@
       
 
       
-        <ul>
-<li>onDraw()方法中的Canvas的大小是多少</li>
-<li>控件的大小是wrap_content时 getMeasuredWidth()是如何测量的</li>
-<li>IPC过程</li>
+        <h1 id="Android-View篇—–初识view"><a href="#Android-View篇—–初识view" class="headerlink" title="Android View篇—–初识view"></a>Android View篇—–初识view</h1><h2 id="view简介"><a href="#view简介" class="headerlink" title="view简介"></a>view简介</h2><p>在Android操作系统中，几乎所有的UI元素都是基于View和ViewGroup创建出来的。View就是一块可以用来进行绘画，可以处理输入事件进行交互的矩形区域，而ViewGroup就是一种可以容纳View的矩形容器。 </p>
+<p>下图就是ViewGroup和View组成的UI布局结构。View和ViewGroup通过这种树形结构组合在一起，构成了我们在手机屏幕上看到的一个个的复杂的界面。</p>
+<p><a href="http://note.youdao.com/noteshare?id=fcb8adf91d321144ad7eb1db1b2254cb" target="_blank" rel="noopener">view</a></p>
+<p>ViewGroup和View是组合模式的典型应用。View是基本的控件元素，ViewManager接口定义了添加、删除View的接口addView、removeView，ViewGroup实现了ViewParent的接口，因此可以作为容器管理View，同时ViewGroup又继承自View，可以被其他的ViewGroup管理。这样ViewGroup和View就可以组成上面的树状结构了。</p>
+<p><a href="http://note.youdao.com/noteshare?id=518641c7fd4fa42acb950db52d1e5b2b" target="_blank" rel="noopener">ViewManager结构图</a></p>
+<p>实际的代码实现过程中很少会直接使用ViewGroup和View，而是使用继承自它们的之类，如FrameLayout、LinearLayout、ListView等是ViewGroup的子类，TextView、ImageView、SurfaceView等是View的子类。</p>
+<h2 id="View的位置参数"><a href="#View的位置参数" class="headerlink" title="View的位置参数"></a>View的位置参数</h2><p>想要学好view，写出自己的view就必须搞清楚view的位置参数。</p>
+<p>view的位置主要是由它的四个顶点决定的，分别对应View的四个属性：top、left、right、bottom。</p>
+<p><a href="http://note.youdao.com/noteshare?id=2a46e70a30242b257cd0db52555700dc" target="_blank" rel="noopener">view的位置参数</a></p>
+<p><a href="http://note.youdao.com/noteshare?id=f0fbe13cd832b538ef5dc6e017e022f8" target="_blank" rel="noopener">view位置参数具体总结</a></p>
+<h2 id="MotionEvent"><a href="#MotionEvent" class="headerlink" title="MotionEvent"></a>MotionEvent</h2><p>在手指接触屏幕后所产生的一系列事件中，典型的事件类型有如下几种：</p>
+<ul>
+<li>ACTION_DOWN: 手指刚接触屏幕；</li>
+<li>ACTION_MOVE: 手指在屏幕上移动</li>
+<li>ACTION_UP: 手指在屏幕上松开的一瞬间</li>
 </ul>
+<p>上述是三种典型的点击事件，还有ACTION_POINTER_DOWN等。通过点击事件我们可以获得点击事件发生的x和y坐标。</p>
+<p>系统提供了两种方法：</p>
+<ul>
+<li>event.getX() / event.getY()<blockquote>
+<p>返回的是相对于当前view左上角的坐标x和y</p>
+</blockquote>
+</li>
+<li>event.getRawX() / event.getRawY()<blockquote>
+<p>返回的是相对于手机屏幕左上角的坐标x和y</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="TouchSlop"><a href="#TouchSlop" class="headerlink" title="TouchSlop"></a>TouchSlop</h2><p>TouchSlop是系统所能识别出的被认为是滑动的最小距离。也就是，当手指在屏幕上滑动时，如果两次滑动的这个距离小于这个常量，系统就不认为你是在进行滑动操作。这个常量和设备有关，通常用如下方式获得这个常量：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ViewConfiguration.get(getContext()).getScaledTouchSlop()</span><br></pre></td></tr></table></figure></p>
+<h2 id="VelocityTracker"><a href="#VelocityTracker" class="headerlink" title="VelocityTracker"></a>VelocityTracker</h2><p>速度追踪，用于追踪手指在滑动的过程中的速度，包括水平和竖直方向的速度。首先，在view的onTouchEvent方法中追踪当前单击事件的速度，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">VelocityTracker velocityTracker = VelocityTracker.obtain();</span><br><span class="line"></span><br><span class="line">velocityTracker.addMovement(event);</span><br></pre></td></tr></table></figure></p>
+<p>接着，当我们想知道当前的滑动速度时，这个时候可以采用如下方式来获得当前的速度：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">velocityTracker.computeCurrentVelocity(1000);</span><br><span class="line">int xVelocity = (int) velocityTracker.getXVelocity();</span><br><span class="line">int yVelocity = (int) velocityTracker.getYVelocity();</span><br></pre></td></tr></table></figure></p>
+<p>有两点需要注意：</p>
+<ol>
+<li>获取速度之前必须要先计算速度，即getXVelocity和getYVelocity这两个方法前必须要调用computeCurrentVelocity方法。</li>
+<li>这里的速度是指<strong>一段时间内手指所滑过的像素数</strong>，比如将时间设为1000ms,在1s内，手指在水平方向从左向右滑过100像素，那么水平速度就是100。注意速度可以为负值，即当手指从右向左滑动的时候。另外，computeCurrentVelocity这个方法的参数表示的是一个时间单元或者说是时间间隔，单位是毫秒(ms)。</li>
+</ol>
+<p>最后，当不需要使用它的时候，需要调用clear方法来<strong>重置</strong>并<strong>回收内存</strong>：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">velocityTracker.clear();</span><br><span class="line">velocityTracker.recycle();</span><br></pre></td></tr></table></figure></p>
+<h2 id="GestureDetector"><a href="#GestureDetector" class="headerlink" title="GestureDetector"></a>GestureDetector</h2><blockquote>
+<p>在写项目的时候，想要实现图片双指缩放的功能，在网上看见了有用GestureDetector来实现的方法，但是一般在onTouchEvent中实现就可以，主要还是看个人习惯，像双击的话就用GestureDetector中的方法比较方便。</p>
+</blockquote>
+<p>GestureDetector用于手势检测，用于辅助检测用户的单击、滑动、长按、双击等行为。</p>
+<p>GestureDetector这个类对外部提供了两个接口和一个外部类，其中包括：</p>
+<ul>
+<li>接口：OnGestureListener OnDoubleTapListener</li>
+<li>内部类：SimpleOnGestureListener</li>
+</ul>
+<h4 id="OnGestureListener基本使用"><a href="#OnGestureListener基本使用" class="headerlink" title="OnGestureListener基本使用"></a>OnGestureListener基本使用</h4><p>首先在MainActivity中定义我们的手势监听器，并让的当前的Acticity来实现监听接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">//定义手势监听器</span><br><span class="line">GestureDetector mGestureDetector;</span><br><span class="line"></span><br><span class="line">@Override</span><br><span class="line">protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">    super.onCreate(savedInstanceState);</span><br><span class="line">    setContentView(R.layout.activity_main);</span><br><span class="line">    mGestureDetector = new GestureDetector(this,this);</span><br><span class="line">    //解决长按屏幕后无法拖动的现象</span><br><span class="line">    mGestureDetector.setIsLongpressEnabled(false);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>实现接口中的回调方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">//手指轻轻触摸屏幕的一瞬间，由一个ACTION_DOWN触发</span><br><span class="line">@Override</span><br><span class="line">public boolean onDown(MotionEvent e) &#123;</span><br><span class="line">    System.out.println(&quot;onDown&quot;);</span><br><span class="line">    return false;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//手指轻轻触摸屏幕,尚未松开或拖动，由一个ACTION_DOWN触发</span><br><span class="line">//注意和onDown()的区别，他强调的是没有松开或者拖动的状态</span><br><span class="line">@Override</span><br><span class="line">public void onShowPress(MotionEvent e) &#123;</span><br><span class="line">    System.out.println(&quot;onShowPress&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//手指(轻轻触摸屏幕后)松开，伴随着一个ACTION_UP而触发，这是单机行为</span><br><span class="line">@Override</span><br><span class="line">public boolean onSingleTapUp(MotionEvent e) &#123;</span><br><span class="line">    System.out.println(&quot;onSingleTapUp&quot;);</span><br><span class="line">    return false;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//手指按下屏幕并拖动，由一个ACTION_DOWN,多个ACTION_MOVE触发，这是拖动行为</span><br><span class="line">@Override</span><br><span class="line">public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) &#123;</span><br><span class="line">    System.out.println(&quot;onScroll&quot;);</span><br><span class="line">    return false;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//用户长久的按着屏幕不放，即长按</span><br><span class="line">@Override</span><br><span class="line">public void onLongPress(MotionEvent e) &#123;</span><br><span class="line">    System.out.println(&quot;onLongPress&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//用户按下触摸屏，快速滑动后松开，由一个ACTION_DOWN,多个ACTION_MOVE和一个ACTION_UP触发，这是快速滑动行为</span><br><span class="line">@Override</span><br><span class="line">public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) &#123;</span><br><span class="line">    System.out.println(&quot;onFling&quot;);</span><br><span class="line">    return false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后将Activity中的OnTouchEvent事件交给手势监听器处理：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean onTouchEvent(MotionEvent event) &#123;</span><br><span class="line">    return gestureDetector.onTouchEvent(event);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="OnDoubleTapListener基本使用"><a href="#OnDoubleTapListener基本使用" class="headerlink" title="OnDoubleTapListener基本使用:"></a>OnDoubleTapListener基本使用:</h4><p>同样的让MainActivity也实现OnDoubleTapListener接口。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class MainActivity extends Activity implements OnGestureListener,OnDoubleTapListener</span><br></pre></td></tr></table></figure></p>
+<p>实现对应的抽象方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">//双击，由两次连续的单击组成，它不可能和onSingleTapConfirmed共存(当系统接受到双击事件的时候会在两次点击之间触发一次下面的方法)</span><br><span class="line">@Override</span><br><span class="line">public boolean onDoubleTap(MotionEvent e) &#123;</span><br><span class="line">    System.out.println(&quot;onDoubleTap&quot;);</span><br><span class="line">    return false;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//严格的单击行为</span><br><span class="line">//和onSingleTapUp的区别：如果触发了onSingleTapConfirmed，那么后面不可能在紧跟着另一个单击行为，即这只可能是单击，而不可能是双击中的一次单击</span><br><span class="line">@Override</span><br><span class="line">public boolean onSingleTapConfirmed(MotionEvent e) &#123;</span><br><span class="line">    System.out.println(&quot;onSingleTapConfirmed&quot;);</span><br><span class="line">    return false;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//表示发生了双击行为，在双击的期间，ACTION_DOWN ACTION_MOVE ACTION_UP都会触发此回调(当系统接收到双击事件的时候,在每一次的结束触发下面的方法一次)</span><br><span class="line"> @Override</span><br><span class="line">public boolean onDoubleTapEvent(MotionEvent e) &#123;</span><br><span class="line">    System.out.println(&quot;onDoubleTapEvent&quot;);</span><br><span class="line">    return false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -402,19 +448,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/04/03/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
-              </a>
+              <a href="/2019/04/08/自定义View问题总结/" rel="next" title="<自定义View问题总结>">
+                <i class="fa fa-chevron-left"></i> <自定义view问题总结>
+              </自定义view问题总结></a>
             
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/04/12/view篇1-初识view/" rel="prev" title="view篇1--------初识view">
-                view篇1--------初识view <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -492,8 +534,17 @@ var jiathis_config={
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -547,6 +598,22 @@ var jiathis_config={
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-View篇—–初识view"><span class="nav-number">1.</span> <span class="nav-text">Android View篇—–初识view</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#view简介"><span class="nav-number">1.1.</span> <span class="nav-text">view简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#View的位置参数"><span class="nav-number">1.2.</span> <span class="nav-text">View的位置参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MotionEvent"><span class="nav-number">1.3.</span> <span class="nav-text">MotionEvent</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TouchSlop"><span class="nav-number">1.4.</span> <span class="nav-text">TouchSlop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VelocityTracker"><span class="nav-number">1.5.</span> <span class="nav-text">VelocityTracker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GestureDetector"><span class="nav-number">1.6.</span> <span class="nav-text">GestureDetector</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#OnGestureListener基本使用"><span class="nav-number">1.6.0.1.</span> <span class="nav-text">OnGestureListener基本使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#OnDoubleTapListener基本使用"><span class="nav-number">1.6.0.2.</span> <span class="nav-text">OnDoubleTapListener基本使用:</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
