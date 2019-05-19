@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="description" content="概述FileProvider继承自ContentProvider 从英语翻译过来就是文件提供 也就是文件共享 当我们需要使用本地的文件时(这样说好像不太对)   例如调用相机拍照 需要将照片显示在屏幕上 照片是需要缓存在sdcard的缓存文件目录中的 这时就会用到FileProvider。 还有一个用处就是在自动安装apk上 我们经常会遇到app更新 此时系统会自动弹出一个框让我们更新并安装。">
 <meta name="keywords" content="Android java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://yoursite.com/2019/04/03/hello-world/index.html">
+<meta property="og:title" content="简单总结FileProvider">
+<meta property="og:url" content="http://yoursite.com/2019/05/19/简单总结FileProvider/index.html">
 <meta property="og:site_name" content="bumblebee&#39;s blog">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="概述FileProvider继承自ContentProvider 从英语翻译过来就是文件提供 也就是文件共享 当我们需要使用本地的文件时(这样说好像不太对)   例如调用相机拍照 需要将照片显示在屏幕上 照片是需要缓存在sdcard的缓存文件目录中的 这时就会用到FileProvider。 还有一个用处就是在自动安装apk上 我们经常会遇到app更新 此时系统会自动弹出一个框让我们更新并安装。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-04-03T12:47:45.793Z">
+<meta property="og:updated_time" content="2019-05-19T06:51:26.196Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="twitter:title" content="简单总结FileProvider">
+<meta name="twitter:description" content="概述FileProvider继承自ContentProvider 从英语翻译过来就是文件提供 也就是文件共享 当我们需要使用本地的文件时(这样说好像不太对)   例如调用相机拍照 需要将照片显示在屏幕上 照片是需要缓存在sdcard的缓存文件目录中的 这时就会用到FileProvider。 还有一个用处就是在自动安装apk上 我们经常会遇到app更新 此时系统会自动弹出一个框让我们更新并安装。">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/04/03/hello-world/">
+  <link rel="canonical" href="http://yoursite.com/2019/05/19/简单总结FileProvider/">
 
 
 
 
 
-  <title>Hello World | bumblebee's blog</title>
+  <title>简单总结FileProvider | bumblebee's blog</title>
   
 
 
@@ -297,7 +297,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/03/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/19/简单总结FileProvider/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="lixinyi">
@@ -314,7 +314,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hello World</h1>
+          <h1 class="post-title" itemprop="name headline">简单总结FileProvider</h1>
         
 
         <div class="post-meta">
@@ -326,8 +326,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-03T20:47:45+08:00">
-                2019-04-03
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-19T14:49:18+08:00">
+                2019-05-19
               </time>
             
 
@@ -364,15 +364,53 @@
       
 
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>FileProvider继承自ContentProvider 从英语翻译过来就是文件提供 也就是文件共享 当我们需要使用本地的文件时(这样说好像不太对) </p>
+<ol>
+<li>例如调用相机拍照 需要将照片显示在屏幕上 照片是需要缓存在sdcard的缓存文件目录中的 这时就会用到FileProvider。</li>
+<li>还有一个用处就是在自动安装apk上 我们经常会遇到app更新 此时系统会自动弹出一个框让我们更新并安装。</li>
+</ol>
+<p>FileProvider使用时需要注意的一个地方就是Android7.0版本以后和Android4.4之前 对uri(通用资源标识符 Android上可用的每种资源-图像、视频片段都可以用uri来表示)的操作是不一样的。</p>
+<h1 id="相机获取本地图片"><a href="#相机获取本地图片" class="headerlink" title="相机获取本地图片"></a>相机获取本地图片</h1><p>最近写了一个demo 主要是想实现从相册 本地获取的照片通过画布展现在屏幕上 并实现图片的保存。</p>
+<p>下面就贴下我写的开启照相机拍照的代码：<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> takePhoto()&#123;</span><br><span class="line">    <span class="comment">//判断设备中是否存在sdcard</span></span><br><span class="line">    <span class="keyword">String</span> SDState = Environment.getExternalStorageState();</span><br><span class="line">    Intent intent = <span class="keyword">new</span> Intent(MediaStore.ACTION_IMAGE_CAPTURE);</span><br><span class="line">    <span class="built_in">if</span>(SDState.equals(Environment.MEDIA_MOUNTED))&#123;</span><br><span class="line">        <span class="built_in">File</span> outputImage = <span class="keyword">new</span> <span class="built_in">File</span>(getExternalCacheDir(),<span class="string">"output_image.jpg"</span>);</span><br><span class="line">        <span class="built_in">if</span>(!outputImage.<span class="built_in">exists</span>())&#123;</span><br><span class="line">            outputImage.<span class="built_in">mkdir</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">if</span>(Build.VERSION.SDK_INT&gt;=<span class="number">24</span>)&#123;</span><br><span class="line">            imageUri = FileProvider.getUriForFile(<span class="keyword">this</span>,</span><br><span class="line">                    <span class="keyword">this</span>.getPackageName()+<span class="string">".android7.fileprovider"</span>,outputImage);</span><br><span class="line">            Log.e(<span class="string">"tag"</span>,imageUri.toString());</span><br><span class="line">        &#125;<span class="built_in">else</span> &#123;</span><br><span class="line">            imageUri = Uri.fromFile(outputImage);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    intent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);</span><br><span class="line">    startActivityForResult(intent,SELECT_PIC_BY_TAKE_PHOTO);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="解决FileUriExposedException"><a href="#解决FileUriExposedException" class="headerlink" title="解决FileUriExposedException"></a>解决FileUriExposedException</h2><p>在没有用FileProvider 只用Uri.fromFile()是对<strong>file://</strong>的访问 对于Android7.0来说是禁止的 要在应用间共享文件 应发送一项content://URL 并授予URL临时访问权限 这时就需要用到FileProvider。</p>
+<p>使用FileProvider兼容拍照需要以下几个步骤：</p>
+<h2 id="声明provider"><a href="#声明provider" class="headerlink" title="声明provider"></a>声明provider</h2><figure class="highlight dust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">provider</span></span></span></span><br><span class="line"><span class="xml">    android:authorities="$</span><span class="template-variable">&#123;applicationId&#125;</span><span class="xml">.android7.fileprovider"</span></span><br><span class="line"><span class="xml">    android:name="android.support.v4.content.FileProvider"</span></span><br><span class="line"><span class="xml">    android:exported="false"</span></span><br><span class="line"><span class="xml">    android:grantUriPermissions="true"&gt;</span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">meta-data</span></span></span></span><br><span class="line"><span class="xml">        android:name="android.support.FILE_PROVIDER_PATHS"</span></span><br><span class="line"><span class="xml">        android:resource="@xml/file_paths"/&gt;</span></span><br><span class="line"><span class="xml"><span class="tag">&lt;/<span class="name">provider</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p>声明provider的原因我是这样理解的：FileProvider是ContentProvider的一个子类 在文件共享时需要声明来告诉系统进行了文件共享操作。</p>
+<p>meta-data,里面指向了一个xml文件。</p>
+<h2 id="编写resource-xml-file"><a href="#编写resource-xml-file" class="headerlink" title="编写resource xml file"></a>编写resource xml file</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">paths</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">external-path</span></span></span><br><span class="line"><span class="tag">        <span class="attr">name</span>=<span class="string">"my_images"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">path</span>=<span class="string">"/"</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--使用内部缓存--&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">paths</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>此文件的创建过程：res–&gt;xml–&gt;file_paths.xml。</p>
+<p>在paths节点内部支持以下几个子节点，分别为：</p>
+<ul>
+<li><root-path><br>相当于new File(“/“)，指向了整个存储的根目录。</root-path></li>
+<li><files-path><br>相当于context.getFileDir()</files-path></li>
+</ul>
+<p>返回文件系统上文件所在目录的绝对路径</p>
+<ul>
+<li><cache-file><br>相当于context.getCacheDir()</cache-file></li>
+</ul>
+<p>返回特定用于程序的缓存目录的绝对路径</p>
+<ul>
+<li><external-path><br>相当于Environment.getExternalStorageDirectory()</external-path></li>
+</ul>
+<p>返回主共享/外部存储目录。这个目录可能用户将其安装在其上 目前无法访问电脑 从设备中删除或一些问题发生了。使用此方法确定当前状态。</p>
+<ul>
+<li><external-files-path><br>相当于context.getExternalFileDirs()</external-files-path></li>
+</ul>
+<p>返回主数据库上特定于应用程序的目录的绝对路径共享外部存储设备，应用程序可以放置缓存它拥有的文件。这些程序是应用程序的内部文件，而不是通常作为媒体对用户可见。</p>
+<ul>
+<li><external-cache-path><br>相当于getExternalCacheDirs()</external-cache-path></li>
+</ul>
+<p>返回主数据库上特定于应用程序的目录的绝对路径共享外部存储设备，应用程序可以放置缓存它拥有的文件。这些程序是应用程序的内部文件，而不是通常作为媒体对用户可见。</p>
+<p>这六个结点相对应的方法的作用 是我根据源码中对方法作用的注释 具体的区别我目前还不是很懂 我大概的理解是在拍照后照片需要存储在缓存文件中 我们需要给照片一个具体完整的路径 根据上面的六种基本路径存储方式会对应的得到一个文件路径头 后面的需要我们对应的补充。我看了很多博客大家都基本上选用<external-path>结点 这个基础路径后面直接是图片的名称，即子目录。</external-path></p>
+<h2 id="使用FileProvider-API"><a href="#使用FileProvider-API" class="headerlink" title="使用FileProvider API"></a>使用FileProvider API</h2><p>主要代码就是：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FileProvider.getUriForFile(<span class="keyword">this</span>,<span class="keyword">this</span>.getPackageName()+<span class="string">".android7.fileprovider"</span>,outputImage);</span><br></pre></td></tr></table></figure></p>
+<p>getUriForFile()方法中有三个参数 第二个参数很重要，可以随便命名但是必须和前面的provider中的authorities属性相对应,第三个参数是自定义的图片文件路径。</p>
+<p>#Android4.4 7.0的区别</p>
+<p>版本兼容的方法就是用版本校对<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(Build.VERSION.SDK_INT&gt;=<span class="number">24</span>)&#123;</span><br><span class="line">    imageUri = FileProvider.getUriForFile(<span class="keyword">this</span>,</span><br><span class="line">            <span class="keyword">this</span>.getPackageName()+<span class="string">".android7.fileprovider"</span>,outputImage);</span><br><span class="line">    Log.e(<span class="string">"tag"</span>,imageUri.toString());</span><br><span class="line">&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">    imageUri = Uri.fromFile(outputImage);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>不用版本校对就需要为grantUriPermission进行授权。</p>
+<p>主要思想就是通过获得应用中的包名加入到一个集合中，再通过for循环依次为当前符合条件的授权。</p>
+<p>代码请参考鸿洋大神的博客<a href="https://blog.csdn.net/lmj623565791/article/details/72859156" target="_blank" rel="noopener">Android 7.0 行为变更 通过FileProvider在应用间共享文件吧</a></p>
+<h1 id="使用FileProvider兼容安装apk"><a href="#使用FileProvider兼容安装apk" class="headerlink" title="使用FileProvider兼容安装apk"></a>使用FileProvider兼容安装apk</h1><p>自动安装apk在考虑到版本不同的情况下 和拍照获取图片又是不一样的。主要问题在于ACTION_IMAGE_CAPTURE 在startActivity后 会逐层调用一个方法intent.migrateExtraStreamToClipData();此方法中有setClipData()方法 将EXTRA_OUTPUT转化 还添加了FLAG_GRANT_WRITE_URI_PERMISSION|FLAG_GRANT_READ_URI_PERMISSION两种权限(对uri的读和写) 这些方法在自动安装中并不会调用所以需要我们自己申请。</p>
+<p>下面是一个通用的类：<br><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> FileProviderUtil &#123;</span><br><span class="line">    <span class="keyword">public</span> static Uri getUriForFile(Context context, <span class="keyword">File</span> <span class="keyword">file</span>)&#123;</span><br><span class="line">        Uri fileUri = null;</span><br><span class="line">        <span class="keyword">if</span>(Build.VERSION.SDK_INT &gt; <span class="number">24</span>)&#123;</span><br><span class="line">            fileUri = getUriForFile24(context,<span class="keyword">file</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            fileUri = Uri.fromFile(<span class="keyword">file</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> fileUri;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> static Uri getUriForFile24(Context context,<span class="keyword">File</span> <span class="keyword">file</span>)&#123;</span><br><span class="line">        Uri fileUrl = android.support.v4.content.FileProvider.</span><br><span class="line">                getUriForFile(context,context.getPackageName()+<span class="string">".android7.fileprovider"</span>,<span class="keyword">file</span>);</span><br><span class="line">        <span class="keyword">return</span> fileUrl;</span><br><span class="line">    &#125;</span><br><span class="line">    //为自动安装apk设置权限</span><br><span class="line">    <span class="keyword">public</span> static void setIntentDataAndType(Context context, <span class="keyword">Intent</span> <span class="keyword">intent</span>,</span><br><span class="line">                                            String <span class="keyword">type</span>,<span class="keyword">File</span> <span class="keyword">file</span>,boolean writeAble)&#123;</span><br><span class="line">        <span class="keyword">if</span>(Build.VERSION.SDK_INT&gt;=<span class="number">24</span>)&#123;</span><br><span class="line">            <span class="keyword">intent</span>.setDataAndType(getUriForFile(context,<span class="keyword">file</span>),<span class="keyword">type</span>);</span><br><span class="line">            <span class="keyword">intent</span>.addFlags(<span class="keyword">Intent</span>.FLAG_GRANT_READ_URI_PERMISSION);</span><br><span class="line">            <span class="keyword">if</span>(writeAble)&#123;</span><br><span class="line">                <span class="keyword">intent</span>.addFlags(<span class="keyword">Intent</span>.FLAG_GRANT_WRITE_URI_PERMISSION);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">intent</span>.setDataAndType(Uri.fromFile(<span class="keyword">file</span>),<span class="keyword">type</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -406,15 +444,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2019/04/12/view篇1-初识view/" rel="next" title="view篇1--------初识view">
+                <i class="fa fa-chevron-left"></i> view篇1--------初识view
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/04/08/自定义View问题总结/" rel="prev" title="<自定义View问题总结>">
-                <自定义view问题总结> <i class="fa fa-chevron-right"></i>
-              </自定义view问题总结></a>
             
           </div>
         </div>
@@ -566,7 +604,7 @@ var jiathis_config={
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#相机获取本地图片"><span class="nav-number">2.</span> <span class="nav-text">相机获取本地图片</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#解决FileUriExposedException"><span class="nav-number">2.1.</span> <span class="nav-text">解决FileUriExposedException</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#声明provider"><span class="nav-number">2.2.</span> <span class="nav-text">声明provider</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编写resource-xml-file"><span class="nav-number">2.3.</span> <span class="nav-text">编写resource xml file</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用FileProvider-API"><span class="nav-number">2.4.</span> <span class="nav-text">使用FileProvider API</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用FileProvider兼容安装apk"><span class="nav-number">3.</span> <span class="nav-text">使用FileProvider兼容安装apk</span></a></li></ol></div>
             
 
           </div>
