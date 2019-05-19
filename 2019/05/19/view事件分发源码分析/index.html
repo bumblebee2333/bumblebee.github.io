@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32x32-rabbit.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-rabbit.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-rabbit.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="view事件分发源码12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970public boolean dispatchTouchEvent(MotionEvent event) &amp;#123;">
+<meta name="keywords" content="Android java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="view事件分发源码分析">
+<meta property="og:url" content="http://yoursite.com/2019/05/19/view事件分发源码分析/index.html">
+<meta property="og:site_name" content="bumblebee&#39;s blog">
+<meta property="og:description" content="view事件分发源码12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970public boolean dispatchTouchEvent(MotionEvent event) &amp;#123;">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-05-19T06:58:19.235Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="view事件分发源码分析">
+<meta name="twitter:description" content="view事件分发源码12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970public boolean dispatchTouchEvent(MotionEvent event) &amp;#123;">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/19/view事件分发源码分析/">
+
+
+
+
+
+  <title>view事件分发源码分析 | bumblebee's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <a href="https://github.com/bumblebee2333"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">bumblebee's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">People who work hard will not be bad luck.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/19/view事件分发源码分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lixinyi">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="bumblebee's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">view事件分发源码分析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-19T14:57:41+08:00">
+                2019-05-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="view事件分发源码"><a href="#view事件分发源码" class="headerlink" title="view事件分发源码"></a>view事件分发源码</h1><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> boolean <span class="title">dispatchTouchEvent</span>(<span class="params">MotionEvent <span class="keyword">event</span></span>)</span> &#123;</span><br><span class="line">    <span class="comment">// If the event should be handled by accessibility focus first.</span></span><br><span class="line">    <span class="comment">//---&gt;分析一</span></span><br><span class="line">    <span class="comment">//判断事件是否具有焦点可访问性(是否可以获取焦点)(isFocusable isFocusableInTouchMode)</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">event</span>.isTargetAccessibilityFocus()) &#123;</span><br><span class="line">        <span class="comment">// We don't have focus or no virtual descendant has it, do not handle the event.</span></span><br><span class="line">        <span class="comment">//当前view和它的子view都不可以获取焦点 返回false</span></span><br><span class="line">        <span class="keyword">if</span> (!isAccessibilityFocusedViewOrHost()) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// We have focus and got the event, then use normal event dispatch.</span></span><br><span class="line">        <span class="comment">//取消FLAG_TARGET_ACCESSIBILITY_FOCUS标志 进行正常的事件分发</span></span><br><span class="line">        <span class="keyword">event</span>.setTargetAccessibilityFocus(<span class="literal">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    boolean result = <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">//如果事件检查对象不为空，就检查这个事件，包括检查事件序列完整性等等。</span></span><br><span class="line">    <span class="keyword">if</span> (mInputEventConsistencyVerifier != <span class="literal">null</span>) &#123;</span><br><span class="line">        mInputEventConsistencyVerifier.onTouchEvent(<span class="keyword">event</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    final <span class="keyword">int</span> actionMasked = <span class="keyword">event</span>.getActionMasked();</span><br><span class="line">    <span class="keyword">if</span> (actionMasked == MotionEvent.ACTION_DOWN) &#123;</span><br><span class="line">        <span class="comment">// Defensive cleanup for new gesture</span></span><br><span class="line">        <span class="comment">//停止嵌套滑动</span></span><br><span class="line">        <span class="comment">//当嵌套滑动当前不在进行时调用本方法是无害的</span></span><br><span class="line">        <span class="comment">//NestedScrolling</span></span><br><span class="line">        stopNestedScroll();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//---&gt;分析二</span></span><br><span class="line">    <span class="comment">//安全检查当前事件</span></span><br><span class="line">    <span class="keyword">if</span> (onFilterTouchEventForSecurity(<span class="keyword">event</span>)) &#123;</span><br><span class="line">        <span class="comment">//当前view可用且当前事件是为了操作滚动条的 返回true</span></span><br><span class="line">        <span class="keyword">if</span> ((mViewFlags &amp; ENABLED_MASK) == ENABLED &amp;&amp; handleScrollBarDragging(<span class="keyword">event</span>)) &#123;</span><br><span class="line">            result = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//noinspection SimplifiableIfStatement</span></span><br><span class="line">        <span class="comment">//---&gt;分析三</span></span><br><span class="line">        ListenerInfo li = mListenerInfo;</span><br><span class="line">        <span class="comment">//尝试onTouch处理</span></span><br><span class="line">        <span class="comment">//1.listenerInfo不为空</span></span><br><span class="line">        <span class="comment">//2.ListenerInfo的OnTouchListener不为空</span></span><br><span class="line">        <span class="comment">//3.该view是ENABLED的</span></span><br><span class="line">        <span class="comment">//OnTouchListener的OnTouch()返回true</span></span><br><span class="line">        <span class="keyword">if</span> (li != <span class="literal">null</span> &amp;&amp; li.mOnTouchListener != <span class="literal">null</span></span><br><span class="line">                &amp;&amp; (mViewFlags &amp; ENABLED_MASK) == ENABLED</span><br><span class="line">                &amp;&amp; li.mOnTouchListener.onTouch(<span class="keyword">this</span>, <span class="keyword">event</span>)) &#123;</span><br><span class="line">            result = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//---&gt;分析四</span></span><br><span class="line">        <span class="keyword">if</span> (!result &amp;&amp; onTouchEvent(<span class="keyword">event</span>)) &#123;</span><br><span class="line">            result = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//如果经过上面的操作，事件还没有处理</span></span><br><span class="line">    <span class="keyword">if</span> (!result &amp;&amp; mInputEventConsistencyVerifier != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">//调用onUnhandledEvent(),这个事件的后序检查追踪不需要做了</span></span><br><span class="line">        mInputEventConsistencyVerifier.onUnhandledEvent(<span class="keyword">event</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Clean up after nested scrolls if this is the end of a gesture;</span></span><br><span class="line">    <span class="comment">// also cancel it if we tried an ACTION_DOWN but we didn't want the rest</span></span><br><span class="line">    <span class="comment">// of the gesture.</span></span><br><span class="line">    <span class="keyword">if</span> (actionMasked == MotionEvent.ACTION_UP ||</span><br><span class="line">            actionMasked == MotionEvent.ACTION_CANCEL ||</span><br><span class="line">            (actionMasked == MotionEvent.ACTION_DOWN &amp;&amp; !result)) &#123;</span><br><span class="line">        stopNestedScroll();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="分析一"><a href="#分析一" class="headerlink" title="分析一"></a>分析一</h2><p>焦点分为两种：</p>
+<ul>
+<li>硬键盘焦点focusable </li>
+</ul>
+<blockquote>
+<p>通过硬键盘（或物理键盘：蓝牙键盘等）上下左右操作焦点，点击，输入。</p>
+<ul>
+<li>触摸焦点focusableInTouchMode<br>针对触屏情况下，点击屏幕的控件，先触发 OnFocusChangeListener，获取控件焦点，然后执行点击事件。EditText是默认有触摸获取焦点功能的，并将第一抢先获取焦点，因此页面有EditText的时默认有光标，键盘弹出。</li>
+</ul>
+</blockquote>
+<p>设置一个视图是否可以获取焦点可以通过以下方法：<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//设置视图是否可以获得焦点</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> setFocusable(<span class="keyword">boolean</span> focusable) </span><br><span class="line"><span class="comment">//获取视图是否可以获取焦点</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> isFocusable()</span><br></pre></td></tr></table></figure></p>
+<p>触摸设备来说，一个视图在触摸下是否可以成为焦点视图：<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//设置视图是否在触摸模式下可以获得焦点 </span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> setFocusableInTouchMode(<span class="keyword">boolean</span> focusableInTouchMode) </span><br><span class="line"><span class="comment">//获取视图是否在触摸模式下获得焦点</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> isFocusableInTouchMode()</span><br></pre></td></tr></table></figure></p>
+<p><strong>一个视图要想获得焦点必须要setFocusable和setFocusableInTouchMode同时为true时才可以获取焦点。</strong></p>
+<p>下面两个方法用来判断某个视图是否是焦点视图以及是否获取了焦点：<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//是否当前视图就是焦点视图</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">boolean</span> isFocused() </span><br><span class="line"><span class="comment">//当前视图是否是焦点视图，或者子视图里面有焦点视图。</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">boolean</span> hasFocus()</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>event.isTargetAccessibilityFocus()<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** <span class="doctag">@hide</span> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="function"><span class="keyword">boolean</span> <span class="title">isTargetAccessibilityFocus</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> flags = getFlags();</span><br><span class="line">    <span class="keyword">return</span> (flags &amp; FLAG_TARGET_ACCESSIBILITY_FOCUS) != <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>Android在系统级别引入了辅助功能选项来帮助有障碍的用户使用系统，所以一个事件带有FLAG_TARGET_ACCESSIBILITY_FOCUS标志，说明这是一个特殊的辅助功能事件，需要进行特殊处理。</p>
+<ul>
+<li>ev.setTargetAccessibilityFocus(false)<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** <span class="doctag">@hide</span> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="function"><span class="keyword">void</span> <span class="title">setTargetAccessibilityFocus</span><span class="params">(<span class="keyword">boolean</span> targetsFocus)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> flags = getFlags();</span><br><span class="line">    nativeSetFlags(mNativePtr, targetsFocus</span><br><span class="line">            ? flags | FLAG_TARGET_ACCESSIBILITY_FOCUS</span><br><span class="line">            : flags &amp; ~FLAG_TARGET_ACCESSIBILITY_FOCUS);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>取消标志，进行普通分发。</p>
+<h2 id="分析二-过滤触摸事件以应用安全策略"><a href="#分析二-过滤触摸事件以应用安全策略" class="headerlink" title="分析二 过滤触摸事件以应用安全策略"></a>分析二 过滤触摸事件以应用安全策略</h2><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> boolean <span class="title">onFilterTouchEventForSecurity</span>(<span class="params">MotionEvent <span class="keyword">event</span></span>)</span> &#123;</span><br><span class="line">    <span class="comment">//视图窗口被遮挡且接收到运动事件的窗口是部分的或完全被遮挡(安全敏感程序 恶意应用程序)</span></span><br><span class="line">    <span class="keyword">if</span> ((mViewFlags &amp; FILTER_TOUCHES_WHEN_OBSCURED) != <span class="number">0</span></span><br><span class="line">            &amp;&amp; (<span class="keyword">event</span>.getFlags() &amp; MotionEvent.FLAG_WINDOW_IS_OBSCURED) != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// Window is obscured, drop this touch.</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="分析三-ListenerInfo"><a href="#分析三-ListenerInfo" class="headerlink" title="分析三 ListenerInfo"></a>分析三 ListenerInfo</h2><blockquote>
+<p>  Listener used to dispatch focus change events.<br>    This field should be made private, so it is hidden from the SDK.<br>    (监听器用于发送焦点变化事件。<br>    此字段应设为私有字段，对SDK隐藏。)</p>
+</blockquote>
+<h2 id="分析四-onTouch和onTouchEvent"><a href="#分析四-onTouch和onTouchEvent" class="headerlink" title="分析四 onTouch和onTouchEvent"></a>分析四 onTouch和onTouchEvent</h2><ul>
+<li><p>onTouch方法：</p>
+<blockquote>
+<p>onTouch()是OnTouchListener接口的方法，它是获取某一个控件的触摸事件，因此使用时，必须使用setOnTouchListener绑定到控件，然后才能鉴定该控件的触摸事件。当一个View绑定了OnTouchLister后，当有touch事件触发时，就会调用onTouch方法。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">textview.setOnTouchListener(<span class="keyword">new</span> OnTouchListener)&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolean <span class="title">onTouch</span>(<span class="params">View v,MotionEvent <span class="keyword">event</span></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">switch</span>(<span class="keyword">event</span>.getAction())&#123;</span><br><span class="line">            <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            ...</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>onTouchEvent()方法</p>
+<blockquote>
+<p>onTouchEvent是手机屏幕事件的处理方法，是获取的对屏幕的各种操作，比如向左向右滑动，点击返回按钮等等。属于一个宏观的屏幕触摸监控。onTouchEvent方法是override 的Activity的方法。重写了Activity的onTouchEvent方法后，当屏幕有touch事件时，此方法就会被调用。</p>
+</blockquote>
+</li>
+</ul>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">boolean</span> <span class="title">onTouchEvent</span><span class="params">(MotionEvent event)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">float</span> x = event.getX();</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">float</span> y = event.getY();</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> viewFlags = mViewFlags;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> action = event.getAction();</span><br><span class="line">        <span class="comment">//判断当前view是否可点击：CLICKABLE、LONG_CLICKABLE、CONTEXT_CLICKABLE</span></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">boolean</span> clickable = ((viewFlags &amp; CLICKABLE) == CLICKABLE</span><br><span class="line">                || (viewFlags &amp; LONG_CLICKABLE) == LONG_CLICKABLE)</span><br><span class="line">                || (viewFlags &amp; CONTEXT_CLICKABLE) == CONTEXT_CLICKABLE;</span><br><span class="line">        <span class="comment">//如果当前view是不可用的</span></span><br><span class="line">        <span class="keyword">if</span> ((viewFlags &amp; ENABLED_MASK) == DISABLED) &#123;</span><br><span class="line">            <span class="comment">//是UP事件且view状态为按下(FLAG_PRESSED)</span></span><br><span class="line">            <span class="keyword">if</span> (action == MotionEvent.ACTION_UP &amp;&amp; (mPrivateFlags &amp; PFLAG_PRESSED) != <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="comment">//重置当前view的FLAG_PRESSED状态</span></span><br><span class="line">                setPressed(<span class="keyword">false</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            mPrivateFlags3 &amp;= ~PFLAG3_FINGER_DOWN;</span><br><span class="line">            <span class="comment">// A disabled view that is clickable still consumes the touch</span></span><br><span class="line">            <span class="comment">// events, it just doesn't respond to them.</span></span><br><span class="line">            <span class="comment">//一个不可用的view还是能消耗事件，只是不会做出反馈。直接返回是否能够点击。</span></span><br><span class="line">            <span class="keyword">return</span> clickable;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//扩大点击事件的范围</span></span><br><span class="line">        <span class="keyword">if</span> (mTouchDelegate != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (mTouchDelegate.onTouchEvent(event)) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//可点击或者TOOLTIP(此视图可以在悬停或者长按时显示工具提示)</span></span><br><span class="line">        <span class="keyword">if</span> (clickable || (viewFlags &amp; TOOLTIP) == TOOLTIP) &#123;</span><br><span class="line">            <span class="keyword">switch</span> (action) &#123;</span><br><span class="line">                <span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">                    ···</span><br><span class="line">                    <span class="keyword">break</span>;</span><br></pre></td></tr></table></figure>
+<pre><code>        }
+        return true;
+    }
+return false;
+</code></pre><p>}<br><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">### setPressed()</span><br></pre></td></tr></table></figure></p>
+<p>public void setPressed(boolean pressed) {<br>    final boolean needsRefresh = pressed != ((mPrivateFlags &amp; PFLAG_PRESSED) == PFLAG_PRESSED);<br>    //重置按下状态<br>    if (pressed) {<br>        mPrivateFlags |= PFLAG_PRESSED;<br>    } else {<br>        mPrivateFlags &amp;= ~PFLAG_PRESSED;<br>    }</p>
+<pre><code>if (needsRefresh) {
+    //强制视图更新其可绘制状态
+    refreshDrawableState();
+}
+//
+dispatchSetPressed(pressed);
+</code></pre><p>}<br><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">### TouchDelegate(扩展控件的关键类)</span><br><span class="line">&gt; 扩大view事件的点击范围</span><br></pre></td></tr></table></figure></p>
+<p>public TouchDelegate(Rect bounds, View delegateView)<br><figure class="highlight cos"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">```</span><br><span class="line">TouchDelegate touchDelegate = <span class="keyword">new</span> TouchDelegate(delegateArea, myButton)<span class="comment">;</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">View</span>.<span class="keyword">class</span>.isInstance(myButton.getParent())) &#123;</span><br><span class="line">      ((<span class="keyword">View</span>) myButton.getParent()).setTouchDelegate(touchDelegate)<span class="comment">;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>ACTION_DOWN<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//输入设备的输入源是触摸屏幕指示设备</span></span><br><span class="line"><span class="keyword">if</span> (event.getSource() == InputDevice.SOURCE_TOUCHSCREEN) &#123;</span><br><span class="line">    mPrivateFlags3 |= PFLAG3_FINGER_DOWN;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//是否长按</span></span><br><span class="line">mHasPerformedLongPress = <span class="literal">false</span>;</span><br><span class="line"><span class="comment">//view不可点击</span></span><br><span class="line"><span class="keyword">if</span> (!clickable) &#123;</span><br><span class="line">    <span class="comment">//检查长按后结束</span></span><br><span class="line">    checkForLongClick(<span class="number">0</span>, x, y);</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//在DOWN事件期间 执行与按钮相关的操作(鼠标右键)</span></span><br><span class="line"><span class="keyword">if</span> (performButtonActionOnTouchDown(event)) &#123;</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Walk up the hierarchy to determine if we're inside a scrolling container.</span></span><br><span class="line"><span class="comment">//判断该view是否有一层父类是可滑动的</span></span><br><span class="line">boolean isInScrollingContainer = isInScrollingContainer();</span><br><span class="line"></span><br><span class="line"><span class="comment">// For views inside a scrolling container, delay the pressed feedback for</span></span><br><span class="line"><span class="comment">// a short period in case this is a scroll.</span></span><br><span class="line"><span class="comment">//对滚动容器内的视图，延时按下的反馈。</span></span><br><span class="line"><span class="comment">//单击时间一般很短 以防是一个滚动</span></span><br><span class="line"><span class="keyword">if</span> (isInScrollingContainer) &#123;</span><br><span class="line">    <span class="comment">//在滚动容器内 设置PFLAG_PREPRESSED标志位</span></span><br><span class="line">    mPrivateFlags |= PFLAG_PREPRESSED;</span><br><span class="line">    <span class="comment">//若单击为null</span></span><br><span class="line">    <span class="keyword">if</span> (mPendingCheckForTap == <span class="literal">null</span>) &#123;</span><br><span class="line">        mPendingCheckForTap = <span class="keyword">new</span> CheckForTap();</span><br><span class="line">        <span class="comment">//CheckForTap的run()方法</span></span><br><span class="line">        &lt;!--@Override--&gt;</span><br><span class="line">        &lt;!--public <span class="keyword">void</span> run() &#123;--&gt;</span><br><span class="line">                <span class="comment">//设置非预按下状态</span></span><br><span class="line">        &lt;!--    mPrivateFlags &amp;= ~PFLAG_PREPRESSED;--&gt;</span><br><span class="line">                <span class="comment">//设置FLAG_PRESSED状态和drawableHotspotChanged(x,y)</span></span><br><span class="line">        &lt;!--    setPressed(<span class="literal">true</span>, x, y);--&gt;</span><br><span class="line">        &lt;!--   </span><br><span class="line">               <span class="comment">//检查长按</span></span><br><span class="line">               checkForLongClick(ViewConfiguration.getTapTimeout(), x, y);--&gt;</span><br><span class="line">        &lt;!--&#125;--&gt;</span><br><span class="line">    &#125;</span><br><span class="line">    mPendingCheckForTap.x = event.getX();</span><br><span class="line">    mPendingCheckForTap.y = event.getY();</span><br><span class="line">    <span class="comment">//点击任务延时加入执行队里</span></span><br><span class="line">    postDelayed(mPendingCheckForTap, ViewConfiguration.getTapTimeout());</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// Not inside a scrolling container, so show the feedback right away</span></span><br><span class="line">    <span class="comment">//不在滑动容器内 设置按下 检查长按</span></span><br><span class="line">    setPressed(<span class="literal">true</span>, x, y);</span><br><span class="line">    checkForLongClick(<span class="number">0</span>, x, y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">void</span> <span class="title">checkForLongClick</span><span class="params">(<span class="keyword">int</span> delayOffset, <span class="keyword">float</span> x, <span class="keyword">float</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//长按或TOOLTIP</span></span><br><span class="line">    <span class="keyword">if</span> ((mViewFlags &amp; LONG_CLICKABLE) == LONG_CLICKABLE || (mViewFlags &amp; TOOLTIP) == TOOLTIP) &#123;</span><br><span class="line">        <span class="comment">//设置长按为false</span></span><br><span class="line">        mHasPerformedLongPress = <span class="keyword">false</span>;</span><br><span class="line">        <span class="comment">//初始化长按 执行runnable</span></span><br><span class="line">        <span class="keyword">if</span> (mPendingCheckForLongPress == <span class="keyword">null</span>) &#123;</span><br><span class="line">            mPendingCheckForLongPress = <span class="keyword">new</span> CheckForLongPress();</span><br><span class="line">        &#125;</span><br><span class="line">        mPendingCheckForLongPress.setAnchor(x, y);</span><br><span class="line">        mPendingCheckForLongPress.rememberWindowAttachCount();</span><br><span class="line">        mPendingCheckForLongPress.rememberPressedState();</span><br><span class="line">        <span class="comment">//将长按Runnable加入执行队</span></span><br><span class="line">        postDelayed(mPendingCheckForLongPress,</span><br><span class="line">                ViewConfiguration.getLongPressTimeout() - delayOffset);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//CheckForLongPress中的run</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ((mOriginalPressedState == isPressed()) &amp;&amp; (mParent != <span class="keyword">null</span>)</span><br><span class="line">            &amp;&amp; mOriginalWindowAttachCount == mWindowAttachCount) &#123;</span><br><span class="line">        <span class="keyword">if</span> (performLongClick(mX, mY)) &#123;</span><br><span class="line">            mHasPerformedLongPress = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>ACTION_MOVE</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">//如果可以点击</span><br><span class="line">if (clickable) &#123;</span><br><span class="line">    //修改热点状态</span><br><span class="line">    drawableHotspotChanged(x, y);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Be lenient about moving outside of buttons</span><br><span class="line">//x,y在本地坐标中且x,y+slop扩展的区域在视图区域范围内</span><br><span class="line">if (!pointInView(x, y, mTouchSlop)) &#123;</span><br><span class="line">    <span class="comment">&lt;!--public boolean pointInView(float localX, float localY, float slop) &#123;--&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--    return localX &gt;= -slop &amp;&amp; localY &gt;= -slop &amp;&amp; localX &lt; ((mRight - mLeft) + slop) &amp;&amp;--&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--            localY &lt; ((mBottom - mTop) + slop);--&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--&#125;--&gt;</span></span><br><span class="line">    // Outside button</span><br><span class="line">    // Remove any future long press/tap checks</span><br><span class="line">    //超出范围 移除点击、长按线程</span><br><span class="line">    removeTapCallback();</span><br><span class="line">    removeLongPressCallback();</span><br><span class="line">    //恢复未按下状态</span><br><span class="line">    if ((mPrivateFlags &amp; PFLAG_PRESSED) != 0) &#123;</span><br><span class="line">        setPressed(false);</span><br><span class="line">    &#125;</span><br><span class="line">    mPrivateFlags3 &amp;= ~PFLAG3_FINGER_DOWN;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ACTION_CANCLE</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//恢复未按下状态</span></span><br><span class="line"><span class="keyword">if</span> (clickable) &#123;</span><br><span class="line">    setPressed(<span class="literal">false</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//移除点击或长按线程</span></span><br><span class="line">removeTapCallback();</span><br><span class="line">removeLongPressCallback();</span><br><span class="line"><span class="comment">//初始化状态</span></span><br><span class="line">mInContextButtonPress = <span class="literal">false</span>;</span><br><span class="line">mHasPerformedLongPress = <span class="literal">false</span>;</span><br><span class="line">mIgnoreNextUpEvent = <span class="literal">false</span>;</span><br><span class="line">mPrivateFlags3 &amp;= ~PFLAG3_FINGER_DOWN;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ACTION_UP</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line">mPrivateFlags3 &amp;= ~PFLAG3_FINGER_DOWN;</span><br><span class="line"><span class="comment">//如果是tooltip(工具提示 用户长按视图或者鼠标悬停在试图上时 消息显示在视图附近)</span></span><br><span class="line"><span class="keyword">if</span> ((viewFlags &amp; TOOLTIP) == TOOLTIP) &#123;</span><br><span class="line">    <span class="comment">//---&gt;分析1</span></span><br><span class="line">    handleTooltipUp();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//若是tooltip 恢复状态后结束</span></span><br><span class="line"><span class="keyword">if</span> (!clickable) &#123;</span><br><span class="line">    removeTapCallback();</span><br><span class="line">    removeLongPressCallback();</span><br><span class="line">    mInContextButtonPress = <span class="literal">false</span>;</span><br><span class="line">    mHasPerformedLongPress = <span class="literal">false</span>;</span><br><span class="line">    mIgnoreNextUpEvent = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//在嵌套滑动视图的DOWN事件中标记过</span></span><br><span class="line">boolean prepressed = (mPrivateFlags &amp; PFLAG_PREPRESSED) != <span class="number">0</span>;</span><br><span class="line"><span class="keyword">if</span> ((mPrivateFlags &amp; PFLAG_PRESSED) != <span class="number">0</span> || prepressed) &#123;</span><br><span class="line">    <span class="comment">// take focus if we don't have it already and we should in</span></span><br><span class="line">    <span class="comment">// touch mode.</span></span><br><span class="line">    boolean focusTaken = <span class="literal">false</span>;</span><br><span class="line">     <span class="comment">// 判断该View是否为可获得焦点且设置了focusableInTouchMode为true并且还没有获得焦点时</span></span><br><span class="line">    <span class="comment">// 设置focusable意思是控件是否能够获得普通焦点，这个可以理解为通过物理键盘，</span></span><br><span class="line">    <span class="comment">// 因为Android不仅仅针对手机，有可能在某些设备上存在上下键，</span></span><br><span class="line">    <span class="comment">// 如果focusable设置为true，那么键盘上下左右选中，焦点会随之移动。</span></span><br><span class="line">    <span class="comment">// focusableInTouchMode意思是控件是否能触摸获得焦点，</span></span><br><span class="line">    <span class="comment">// 如果设置为true，点击后首先会让View获得焦点，获取后才出发点击事件。</span></span><br><span class="line">    <span class="comment">//---&gt;分析2</span></span><br><span class="line">    <span class="keyword">if</span> (isFocusable() &amp;&amp; isFocusableInTouchMode() &amp;&amp; !isFocused()) &#123;</span><br><span class="line">        <span class="comment">//尝试获得焦点 设置focusTaken</span></span><br><span class="line">        focusTaken = requestFocus();</span><br><span class="line">    &#125;</span><br><span class="line">     <span class="comment">// prepressed状态表示滚动容器中的点击检测还没有被消息队列执行，这个时候如果抬起手指说明是一个点击事件，调用setPressed显示反馈</span></span><br><span class="line">    <span class="keyword">if</span> (prepressed) &#123;</span><br><span class="line">        <span class="comment">// The button is being released before we actually</span></span><br><span class="line">        <span class="comment">// showed it as pressed.  Make it show the pressed</span></span><br><span class="line">        <span class="comment">// state now (before scheduling the click) to ensure</span></span><br><span class="line">        <span class="comment">// the user sees it.</span></span><br><span class="line">        <span class="comment">//处理还没来得及显示的按下状态</span></span><br><span class="line">        <span class="comment">//例如 down事件时延时显示按下状态 到了up事件还没有显示</span></span><br><span class="line">        setPressed(<span class="literal">true</span>, x, y);</span><br><span class="line">        &lt;!--private <span class="keyword">void</span> setPressed(boolean pressed, float x, float y) &#123;--&gt;</span><br><span class="line">        &lt;!--    <span class="keyword">if</span> (pressed) &#123;--&gt;</span><br><span class="line">                    <span class="comment">//更新视图热点</span></span><br><span class="line">        &lt;!--        drawableHotspotChanged(x, y);--&gt;</span><br><span class="line">        &lt;!--    &#125;--&gt;</span><br><span class="line">        &lt;!--    setPressed(pressed);--&gt;</span><br><span class="line">        &lt;!--&#125;--&gt;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//没有执行长按且不会忽略虚假次UP事件</span></span><br><span class="line">    <span class="keyword">if</span> (!mHasPerformedLongPress &amp;&amp; !mIgnoreNextUpEvent) &#123;</span><br><span class="line">        <span class="comment">// This is a tap, so remove the longpress check</span></span><br><span class="line">        removeLongPressCallback();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Only perform take click actions if we were in the pressed state</span></span><br><span class="line">        <span class="comment">//没有通过获取焦点的操作</span></span><br><span class="line">        <span class="comment">//有可能是因为物理或触摸模式为false 也可能在之前已经获得了焦点</span></span><br><span class="line">        <span class="keyword">if</span> (!focusTaken) &#123;</span><br><span class="line">            <span class="comment">// Use a Runnable and post this rather than calling</span></span><br><span class="line">            <span class="comment">// performClick directly. This lets other visual state</span></span><br><span class="line">            <span class="comment">// of the view update before click actions start.</span></span><br><span class="line">            <span class="comment">//通过Runnable和post 将点击事件加入消息队列来让其他视图在单击操作开始之前进行视图更新</span></span><br><span class="line">            ---&gt;分析<span class="number">3</span></span><br><span class="line">            <span class="keyword">if</span> (mPerformClick == <span class="literal">null</span>) &#123;</span><br><span class="line">                mPerformClick = <span class="keyword">new</span></span><br><span class="line">                PerformClick();</span><br><span class="line">                <span class="comment">//performClick()调用onClick()方法</span></span><br><span class="line">            &#125;</span><br><span class="line">            ---&gt;分析<span class="number">4</span></span><br><span class="line">            <span class="keyword">if</span> (!post(mPerformClick)) &#123;</span><br><span class="line">                <span class="comment">//如果加入失败，就直接调用performClick()</span></span><br><span class="line">                performClickInternal();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//如果还没有设置回未按下状态</span></span><br><span class="line">    <span class="keyword">if</span> (mUnsetPressedState == <span class="literal">null</span>) &#123;</span><br><span class="line">        mUnsetPressedState = <span class="keyword">new</span> UnsetPressedState();</span><br><span class="line">        &lt;!--private final <span class="class"><span class="keyword">class</span> <span class="title">UnsetPressedState</span> <span class="title">implements</span> <span class="title">Runnable</span> </span>&#123;--&gt;</span><br><span class="line">        &lt;!--    @Override--&gt;</span><br><span class="line">        &lt;!--    public <span class="keyword">void</span> run() &#123;--&gt;</span><br><span class="line">        &lt;!--        setPressed(<span class="literal">false</span>);--&gt;</span><br><span class="line">        &lt;!--    &#125;--&gt;</span><br><span class="line">        &lt;!--&#125;--&gt;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//如果外层有滑动父view</span></span><br><span class="line">    <span class="keyword">if</span> (prepressed) &#123;</span><br><span class="line">        <span class="comment">//延时发送设置未按下的操作</span></span><br><span class="line">        postDelayed(mUnsetPressedState,</span><br><span class="line">                ViewConfiguration.getPressedStateDuration());</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!post(mUnsetPressedState)) &#123;</span><br><span class="line">        <span class="comment">// If the post failed, unpress right now</span></span><br><span class="line">        <span class="comment">//如果父类没有滑动 直接发送设置未按下状态的操作到执行队列</span></span><br><span class="line">        <span class="comment">//如果没有加入成功 就直接调用run()方法</span></span><br><span class="line">        mUnsetPressedState.run();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//移除tap的runnbale</span></span><br><span class="line">    removeTapCallback();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//不忽略接收下次的ACTION_UP事件</span></span><br><span class="line">mIgnoreNextUpEvent = <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="1-handleTooltipUp"><a href="#1-handleTooltipUp" class="headerlink" title="1.handleTooltipUp()"></a>1.handleTooltipUp()</h4><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">void</span> <span class="title">handleTooltipUp</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mTooltipInfo == <span class="keyword">null</span> || mTooltipInfo.mTooltipPopup == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//移除隐藏的runnable</span></span><br><span class="line">    removeCallbacks(mTooltipInfo.mHideTooltipRunnable);</span><br><span class="line">    <span class="comment">//将隐藏的runnable加入消息队列 经过指定的时间 runnable将在主界面运行</span></span><br><span class="line">    postDelayed(mTooltipInfo.mHideTooltipRunnable,</span><br><span class="line">            ViewConfiguration.getLongPressTooltipHideTimeout());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-判断view是否可以获得焦点"><a href="#2-判断view是否可以获得焦点" class="headerlink" title="2.判断view是否可以获得焦点"></a>2.判断view是否可以获得焦点</h4><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//返回当前view是否能够获得焦点</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="function"><span class="keyword">boolean</span> <span class="title">isFocusable</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> FOCUSABLE == (mViewFlags &amp; FOCUSABLE);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//当视图可聚焦时 在触摸模式下可能不想聚焦</span></span><br><span class="line"><span class="comment">//返回当前view在触摸模式下是否能够获得焦点</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="function"><span class="keyword">boolean</span> <span class="title">isFocusableInTouchMode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> FOCUSABLE_IN_TOUCH_MODE == (mViewFlags &amp; FOCUSABLE_IN_TOUCH_MODE);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//视图有焦点 返会true</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">boolean</span> <span class="title">isFocused</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (mPrivateFlags &amp; PFLAG_FOCUSED) != <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-PerformClick"><a href="#3-PerformClick" class="headerlink" title="3.PerformClick"></a>3.PerformClick</h4><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">PerformClick</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        performClickInternal();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">boolean</span> <span class="title">performClickInternal</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    notifyAutofillManagerOnClick();</span><br><span class="line">    <span class="function"><span class="keyword">return</span> <span class="title">performClick</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">boolean</span> <span class="title">performClick</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// We still need to call this method to handle the cases where performClick() was called</span></span><br><span class="line">    <span class="comment">// externally, instead of through performClickInternal()</span></span><br><span class="line">    notifyAutofillManagerOnClick();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">boolean</span> result;</span><br><span class="line">    <span class="keyword">final</span> ListenerInfo li = mListenerInfo;</span><br><span class="line">    <span class="keyword">if</span> (li != <span class="keyword">null</span> &amp;&amp; li.mOnClickListener != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">//触发声效</span></span><br><span class="line">        playSoundEffect(SoundEffectConstants.CLICK);</span><br><span class="line">        <span class="comment">//调用onClick()</span></span><br><span class="line">        li.mOnClickListener.onClick(<span class="keyword">this</span>);</span><br><span class="line">        result = <span class="keyword">true</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        result = <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//发送辅助功能事件</span></span><br><span class="line">    sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED);</span><br><span class="line"></span><br><span class="line">    notifyEnterOrExitForAutoFillIfNeeded(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="post-mPerformClick"><a href="#post-mPerformClick" class="headerlink" title="post(mPerformClick)"></a>post(mPerformClick)</h4><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">boolean</span> <span class="title">post</span><span class="params">(Runnable action)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> AttachInfo attachInfo = mAttachInfo;</span><br><span class="line">    <span class="keyword">if</span> (attachInfo != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> attachInfo.mHandler.post(action);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Postpone the runnable until we know on which thread it needs to run.</span></span><br><span class="line">    <span class="comment">// Assume that the runnable will be successfully placed after attach.</span></span><br><span class="line">    getRunQueue().post(action);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><a href="http://note.youdao.com/noteshare?id=50d49ebb36636ab459d556bb0a9fc64e&amp;sub=F384AC5551F844CBAEDCD2D118C11F3A" target="_blank" rel="noopener">view事件分发流程图</a></p>
+<p><a href="http://note.youdao.com/noteshare?id=b0233a0e775fbe56c779c71b769fcc97&amp;sub=E95C2C72B1C343FE91F60F6F4CDE6437" target="_blank" rel="noopener">onTouchEvent()方法流程图</a></p>
+<h1 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h1><p><a href="https://www.viseator.com/2017/11/02/android_view_event_3/" target="_blank" rel="noopener">超级详细</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+          
+    <div style="text-align:center;color: #ccc;font-size:14px;">
+        ------ "本文结束"<i class="fa fa-paw"></i>"感谢您的阅读" ------</div>
+    
+      </div>
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/19/简单总结FileProvider/" rel="next" title="简单总结FileProvider">
+                <i class="fa fa-chevron-left"></i> 简单总结FileProvider
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="lixinyi">
+            
+              <p class="site-author-name" itemprop="name">lixinyi</p>
+              <p class="site-description motion-element" itemprop="description">love Android, active life.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/bumblebee2333" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#view事件分发源码"><span class="nav-number">1.</span> <span class="nav-text">view事件分发源码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#分析一"><span class="nav-number">1.1.</span> <span class="nav-text">分析一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析二-过滤触摸事件以应用安全策略"><span class="nav-number">1.2.</span> <span class="nav-text">分析二 过滤触摸事件以应用安全策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析三-ListenerInfo"><span class="nav-number">1.3.</span> <span class="nav-text">分析三 ListenerInfo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析四-onTouch和onTouchEvent"><span class="nav-number">1.4.</span> <span class="nav-text">分析四 onTouch和onTouchEvent</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-handleTooltipUp"><span class="nav-number">1.4.0.1.</span> <span class="nav-text">1.handleTooltipUp()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-判断view是否可以获得焦点"><span class="nav-number">1.4.0.2.</span> <span class="nav-text">2.判断view是否可以获得焦点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-PerformClick"><span class="nav-number">1.4.0.3.</span> <span class="nav-text">3.PerformClick</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#post-mPerformClick"><span class="nav-number">1.4.0.4.</span> <span class="nav-text">post(mPerformClick)</span></a></li></ol></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文章"><span class="nav-number">3.</span> <span class="nav-text">参考文章</span></a></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-snowflake-o"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lixinyi</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
